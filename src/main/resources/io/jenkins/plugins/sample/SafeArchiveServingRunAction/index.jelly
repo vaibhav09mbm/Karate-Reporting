@@ -1,0 +1,23 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler">
+    <l:layout title="karate-report"> 
+     <l:side-panel> 
+            <st:include page="sidepanel.jelly" it="${it.run}" optional="true" /> 
+        </l:side-panel>
+        <l:main-panel> 
+            <h1> 
+                 ${it.name} 
+            </h1>
+             <j:forEach var="i" items="${it.resulthtml}" >
+  <div style="padding:5px;">
+  <li>
+  
+  <img src="${rootURL}/plugin/NewDemo/Karate.png"  width="24" height="24"></img>
+  <a href="${i}" style="padding:8px;"> ${i} </a>
+  
+  </li>
+  </div>
+  </j:forEach>
+    </l:main-panel>
+    </l:layout>
+</j:jelly>
