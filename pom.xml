@@ -29,13 +29,11 @@
 			version used by the plugin.. ~ stapler-plugin.version: The Stapler Maven 
 			plugin version required by the plugin. -->
 	</properties>
-	<name>TODO Plugin</name>
-	<!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for 
-		the applicable one if needed. -->
+	<name>Karate Reporting Plugin</name>
 	<licenses>
 		<license>
-			<name>MIT License</name>
-			<url>https://opensource.org/licenses/MIT</url>
+			<name>LGPL 2.1</name>
+			<url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
 		</license>
 	</licenses>
 	<dependencyManagement>

@@ -26,6 +26,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.verb.POST;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;

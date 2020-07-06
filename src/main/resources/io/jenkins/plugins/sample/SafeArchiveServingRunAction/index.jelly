@@ -12,7 +12,7 @@
   <div style="padding:5px;">
   <li>
   
-  <img src="${rootURL}/plugin/NewDemo/Karate.png"  width="24" height="24"></img>
+  <img src="${rootURL}/plugin/karate-reporting/Karate.png"  width="24" height="24"></img>
   <a href="${i}" style="padding:8px;"> ${i} </a>
   
   </li>
