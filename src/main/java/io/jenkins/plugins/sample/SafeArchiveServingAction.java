@@ -273,10 +273,7 @@ public class SafeArchiveServingAction implements Action {
     }
 
     private HttpResponse serveFile(File file) throws IOException, ServletException {
-        if (CollectionUtils.isEmpty(safeDirectories)) {
-            // this is to keep compatibility with older reports for which the collection might not be initiated
-            return new UnsafeDirectoryBrowserSupport(file);
-        } else if (safeDirectories.contains(file.getParentFile())) {
+          if (safeDirectories.contains(file.getParentFile())) {
             // Reports in safe directories can be trusted and must be served
             // without Content-Security-Policy to display reports properly
             return new UnsafeDirectoryBrowserSupport(file);

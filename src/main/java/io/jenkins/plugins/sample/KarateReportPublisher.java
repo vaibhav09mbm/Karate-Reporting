@@ -99,7 +99,7 @@ public class KarateReportPublisher extends Publisher implements SimpleBuildStep 
 	}
 
 	private static void log(TaskListener listener, String message) {
-		listener.getLogger().println("[CucumberReport] " + message);
+		listener.getLogger().println("[Karate Report] " + message);
 	}
 
 	public String getFileIncludePattern() {
@@ -367,8 +367,8 @@ public class KarateReportPublisher extends Publisher implements SimpleBuildStep 
 		SafeArchiveServingRunAction caa = new SafeArchiveServingRunAction(run,
 				new File(run.getRootDir(), getReportDirectory()),
 				// ReportBuilder.BASE_DIRECTORY
-				Messages.SidePanel_DisplayNameNoTitle(), "features.APITest.html", KarateReportBaseAction.ICON_NAME, getActionName(), htmlFilesList,
-				getDirectorySuffixWithSeparator());
+				Messages.SidePanel_DisplayNameNoTitle(), "features.APITest.html", KarateReportBaseAction.ICON_NAME,
+				getActionName(), htmlFilesList, getDirectorySuffixWithSeparator());
 		run.addAction(caa);
 	}
 
@@ -384,42 +384,6 @@ public class KarateReportPublisher extends Publisher implements SimpleBuildStep 
 		inputDirectory.copyRecursiveTo("**/*.html", directoryForReport);
 		htmlFilesList = directoryForReport.list("features.*.html");
 
-	}
-
-	private String getPomVersion(TaskListener listener) {
-		Properties properties = new Properties();
-		try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("plugin.properties")) {
-			properties.load(inputStream);
-			return properties.getProperty("plugin.version");
-		} catch (IOException e) {
-			log(listener, e.getMessage());
-			return "";
-		}
-	}
-
-	private String[] findJsonFiles(File targetDirectory, String fileIncludePattern, String fileExcludePattern) {
-		DirectoryScanner scanner = new DirectoryScanner();
-		scanner.setBasedir(targetDirectory);
-
-		if (StringUtils.isEmpty(fileIncludePattern)) {
-			scanner.setIncludes(new String[] { DEFAULT_FILE_INCLUDE_PATTERN_JSONS });
-		} else {
-			scanner.setIncludes(new String[] { fileIncludePattern });
-		}
-		if (StringUtils.isNotEmpty(fileExcludePattern)) {
-			scanner.setExcludes(new String[] { fileExcludePattern });
-		}
-		scanner.setBasedir(targetDirectory);
-		scanner.scan();
-		return scanner.getIncludedFiles();
-	}
-
-	private List<String> fullPathToJsonFiles(String[] jsonFiles, File targetBuildDirectory) {
-		List<String> fullPathList = new ArrayList<>();
-		for (String file : jsonFiles) {
-			fullPathList.add(new File(targetBuildDirectory, file).getAbsolutePath());
-		}
-		return fullPathList;
 	}
 
 	private boolean hasReportFailed(Reportable result, TaskListener listener) {
@@ -498,25 +462,6 @@ public class KarateReportPublisher extends Publisher implements SimpleBuildStep 
 		}
 
 		return false;
-	}
-
-	private String evaluateMacro(Run<?, ?> build, FilePath workspace, TaskListener listener, String value)
-			throws InterruptedException, IOException {
-		try {
-			return TokenMacro.expandAll(build, workspace, listener, value);
-		} catch (MacroEvaluationException e) {
-			log(listener, String.format("Could not evaluate macro '%s': %s", value, e.getMessage()));
-		}
-		return value;
-	}
-
-	private void addClassificationsToBuildReport(Run<?, ?> build, FilePath workspace, TaskListener listener,
-			Configuration configuration, List<Classification> listToAdd) throws InterruptedException, IOException {
-		for (Classification classification : listToAdd) {
-			log(listener, String.format("Adding classification - %s -> %s", classification.key, classification.value));
-			configuration.addClassifications(classification.key,
-					evaluateMacro(build, workspace, listener, classification.value));
-		}
 	}
 
 	private List<String> fetchPropertyFiles(File targetDirectory, TaskListener listener) {
