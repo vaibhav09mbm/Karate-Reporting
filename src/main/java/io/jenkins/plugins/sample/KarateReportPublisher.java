@@ -36,11 +36,6 @@ import net.masterthought.cucumber.sorting.SortingMethod;
 
 public class KarateReportPublisher extends Publisher implements SimpleBuildStep {
 
-	private final static String DEFAULT_FILE_INCLUDE_PATTERN_JSONS = "**/*.json";
-	private final static String DEFAULT_FILE_INCLUDE_PATTERN_CLASSIFICATIONS = "**/*.properties";
-
-	private final static String TRENDS_DIR = "cucumber-reports";
-	private final static String TRENDS_FILE = "cucumber-trends.json";
 	private final static String KARATE_REPORT = "karate-report";
 
 	private String reportDirectory = "";
@@ -52,39 +47,9 @@ public class KarateReportPublisher extends Publisher implements SimpleBuildStep 
 
 	private int trendsLimit;
 	private String sortingMethod;
-	private List<Classification> classifications;
-
-	private String classificationsFilePattern = "";
-
-	/**
-	 * This method, invoked after object is resurrected from persistence, to keep
-	 * backward compatibility.
-	 */
-	protected void keepBackwardCompatibility() {
-		if (classifications == null) {
-			classifications = new ArrayList<>();
-		}
-		if (sortingMethod == null) {
-			sortingMethod = SortingMethod.NATURAL.name();
-		}
-
-		reportTitle = StringUtils.defaultString(reportTitle);
-	}
 
 	private static void log(TaskListener listener, String message) {
 		listener.getLogger().println("[Karate Report] " + message);
-	}
-
-	public List<Classification> getClassifications() {
-		return classifications;
-	}
-
-	@DataBoundSetter
-	public void setClassifications(List<Classification> classifications) {
-		// don't store the classifications if there was no element provided
-		if (CollectionUtils.isNotEmpty(classifications)) {
-			this.classifications = classifications;
-		}
 	}
 
 	public int getTrendsLimit() {
@@ -150,24 +115,14 @@ public class KarateReportPublisher extends Publisher implements SimpleBuildStep 
 		return sortingMethod;
 	}
 
-	@DataBoundSetter
-	public void setClassificationsFilePattern(String classificationsFilePattern) {
-		this.classificationsFilePattern = classificationsFilePattern;
+	@DataBoundConstructor
+	public KarateReportPublisher(String reportTitle) {
+		this.reportTitle = reportTitle;
 	}
-
-	public String getClassificationsFilePattern() {
-		return classificationsFilePattern;
-	}
-
+	
 	@Override
 	public void perform(@Nonnull Run<?, ?> run, @Nonnull FilePath workspace, @Nonnull Launcher launcher,
 			@Nonnull TaskListener listener) throws InterruptedException, IOException {
-
-		keepBackwardCompatibility();
-		if (StringUtils.isNotEmpty(reportTitle)) {
-
-			classifications.add(new Classification(Messages.Classification_ReportTitle(), reportTitle));
-		}
 
 		// generateReport(run, workspace, listener);
 		copyReport(run, workspace, listener);
@@ -201,30 +156,6 @@ public class KarateReportPublisher extends Publisher implements SimpleBuildStep 
 		}
 
 		return false;
-	}
-
-	private List<String> fetchPropertyFiles(File targetDirectory, TaskListener listener) {
-		List<String> propertyFiles = new ArrayList<>();
-		if (StringUtils.isNotEmpty(classificationsFilePattern)) {
-			DirectoryScanner scanner = new DirectoryScanner();
-			scanner.setIncludes(new String[] { classificationsFilePattern });
-			scanner.setBasedir(targetDirectory);
-			scanner.setCaseSensitive(false);
-			scanner.scan();
-			propertyFiles = getFullMetaDataPath(scanner.getIncludedFiles(), targetDirectory.toString());
-			for (String propertyFile : propertyFiles) {
-				log(listener, String.format("Found Properties File - %s ", propertyFile));
-			}
-		}
-		return propertyFiles;
-	}
-
-	private List<String> getFullMetaDataPath(String[] files, String propertiesDirectory) {
-		List<String> fullPathList = new ArrayList<>();
-		for (String file : files) {
-			fullPathList.add(propertiesDirectory + File.separator + file);
-		}
-		return fullPathList;
 	}
 
 	@Override
