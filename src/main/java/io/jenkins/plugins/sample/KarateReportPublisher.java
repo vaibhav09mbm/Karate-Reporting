@@ -43,24 +43,8 @@ public class KarateReportPublisher extends Publisher implements SimpleBuildStep 
 	private final static String TRENDS_FILE = "cucumber-trends.json";
 	private final static String KARATE_REPORT = "karate-report";
 
-	private final String fileIncludePattern;
-	private String fileExcludePattern = "";
 	private String reportDirectory = "";
 	private String reportTitle = "";
-
-	private int failedStepsNumber;
-	private int skippedStepsNumber;
-	private int pendingStepsNumber;
-	private int undefinedStepsNumber;
-	private int failedScenariosNumber;
-	private int failedFeaturesNumber;
-
-	private double failedStepsPercentage;
-	private double skippedStepsPercentage;
-	private double pendingStepsPercentage;
-	private double undefinedStepsPercentage;
-	private double failedScenariosPercentage;
-	private double failedFeaturesPercentage;
 
 	private String buildStatus;
 	private FilePath[] htmlFilesList;
@@ -70,18 +54,7 @@ public class KarateReportPublisher extends Publisher implements SimpleBuildStep 
 	private String sortingMethod;
 	private List<Classification> classifications;
 
-	private boolean mergeFeaturesById;
-	private boolean mergeFeaturesWithRetest;
-	private boolean hideEmptyHooks;
-	private boolean skipEmptyJSONFiles;
-	private boolean expandAllSteps;
-
 	private String classificationsFilePattern = "";
-
-	@DataBoundConstructor
-	public KarateReportPublisher(String fileIncludePattern) {
-		this.fileIncludePattern = fileIncludePattern;
-	}
 
 	/**
 	 * This method, invoked after object is resurrected from persistence, to keep
@@ -100,10 +73,6 @@ public class KarateReportPublisher extends Publisher implements SimpleBuildStep 
 
 	private static void log(TaskListener listener, String message) {
 		listener.getLogger().println("[Karate Report] " + message);
-	}
-
-	public String getFileIncludePattern() {
-		return fileIncludePattern;
 	}
 
 	public List<Classification> getClassifications() {
@@ -125,15 +94,6 @@ public class KarateReportPublisher extends Publisher implements SimpleBuildStep 
 	@DataBoundSetter
 	public void setTrendsLimit(int trendsLimit) {
 		this.trendsLimit = trendsLimit;
-	}
-
-	public String getFileExcludePattern() {
-		return fileExcludePattern;
-	}
-
-	@DataBoundSetter
-	public void setFileExcludePattern(String fileExcludePattern) {
-		this.fileExcludePattern = fileExcludePattern;
 	}
 
 	public String getReportDirectory() {
@@ -161,114 +121,6 @@ public class KarateReportPublisher extends Publisher implements SimpleBuildStep 
 
 	public String getDirectorySuffixWithSeparator() {
 		return StringUtils.isEmpty(this.reportTitle) ? "" : ReportBuilder.SUFFIX_SEPARATOR + getDirectorySuffix();
-	}
-
-	public int getFailedStepsNumber() {
-		return failedStepsNumber;
-	}
-
-	@DataBoundSetter
-	public void setFailedStepsNumber(int failedStepsNumber) {
-		this.failedStepsNumber = failedStepsNumber;
-	}
-
-	public int getSkippedStepsNumber() {
-		return skippedStepsNumber;
-	}
-
-	@DataBoundSetter
-	public void setSkippedStepsNumber(int skippedStepsNumber) {
-		this.skippedStepsNumber = skippedStepsNumber;
-	}
-
-	public int getPendingStepsNumber() {
-		return pendingStepsNumber;
-	}
-
-	@DataBoundSetter
-	public void setPendingStepsNumber(int pendingStepsNumber) {
-		this.pendingStepsNumber = pendingStepsNumber;
-	}
-
-	public int getUndefinedStepsNumber() {
-		return undefinedStepsNumber;
-	}
-
-	@DataBoundSetter
-	public void setUndefinedStepsNumber(int undefinedStepsNumber) {
-		this.undefinedStepsNumber = undefinedStepsNumber;
-	}
-
-	public int getFailedScenariosNumber() {
-		return failedScenariosNumber;
-	}
-
-	@DataBoundSetter
-	public void setFailedScenariosNumber(int failedScenariosNumber) {
-		this.failedScenariosNumber = failedScenariosNumber;
-	}
-
-	public int getFailedFeaturesNumber() {
-		return failedFeaturesNumber;
-	}
-
-	@DataBoundSetter
-	public void setFailedFeaturesNumber(int failedFeaturesNumber) {
-		this.failedFeaturesNumber = failedFeaturesNumber;
-	}
-
-	public double getFailedStepsPercentage() {
-		return failedStepsPercentage;
-	}
-
-	@DataBoundSetter
-	public void setFailedStepsPercentage(double failedStepsPercentage) {
-		this.failedStepsPercentage = failedStepsPercentage;
-	}
-
-	public double getSkippedStepsPercentage() {
-		return skippedStepsPercentage;
-	}
-
-	@DataBoundSetter
-	public void setSkippedStepsPercentage(double skippedStepsPercentage) {
-		this.skippedStepsPercentage = skippedStepsPercentage;
-	}
-
-	public double getPendingStepsPercentage() {
-		return pendingStepsPercentage;
-	}
-
-	@DataBoundSetter
-	public void setPendingStepsPercentage(double pendingStepsPercentage) {
-		this.pendingStepsPercentage = pendingStepsPercentage;
-	}
-
-	public double getUndefinedStepsPercentage() {
-		return undefinedStepsPercentage;
-	}
-
-	@DataBoundSetter
-	public void setUndefinedStepsPercentage(double undefinedStepsPercentage) {
-		this.undefinedStepsPercentage = undefinedStepsPercentage;
-	}
-
-	public double getFailedScenariosPercentage() {
-		return failedScenariosPercentage;
-	}
-
-	@DataBoundSetter
-	public void setFailedScenariosPercentage(double failedScenariosPercentage) {
-		this.failedScenariosPercentage = failedScenariosPercentage;
-	}
-
-	public double getFailedFeaturesPercentage() {
-		return failedFeaturesPercentage;
-	}
-
-	@DataBoundSetter
-	public void setFailedFeaturesPercentage(double failedFeaturesPercentage) {
-		this.failedFeaturesPercentage = failedFeaturesPercentage;
 	}
 
 	public String getBuildStatus() {
@@ -305,51 +157,6 @@ public class KarateReportPublisher extends Publisher implements SimpleBuildStep 
 
 	public String getClassificationsFilePattern() {
 		return classificationsFilePattern;
-	}
-
-	@DataBoundSetter
-	public void setMergeFeaturesById(boolean mergeFeaturesById) {
-		this.mergeFeaturesById = mergeFeaturesById;
-	}
-
-	public boolean getMergeFeaturesById() {
-		return mergeFeaturesById;
-	}
-
-	@DataBoundSetter
-	public void setMergeFeaturesWithRetest(boolean mergeFeaturesWithRetest) {
-		this.mergeFeaturesWithRetest = mergeFeaturesWithRetest;
-	}
-
-	public boolean getMergeFeaturesWithRetest() {
-		return mergeFeaturesWithRetest;
-	}
-
-	@DataBoundSetter
-	public void setHideEmptyHooks(boolean hideEmptyHooks) {
-		this.hideEmptyHooks = hideEmptyHooks;
-	}
-
-	public boolean getHideEmptyHooks() {
-		return hideEmptyHooks;
-	}
-
-	@DataBoundSetter
-	public void setSkipEmptyJSONFiles(boolean skipEmptyJSONFiles) {
-		this.skipEmptyJSONFiles = skipEmptyJSONFiles;
-	}
-
-	public boolean getSkipEmptyJSONFiles() {
-		return skipEmptyJSONFiles;
-	}
-
-	@DataBoundSetter
-	public void setExpandAllSteps(boolean expandAllSteps) {
-		this.expandAllSteps = expandAllSteps;
-	}
-
-	public boolean getExpandAllSteps() {
-		return expandAllSteps;
 	}
 
 	@Override
@@ -390,74 +197,6 @@ public class KarateReportPublisher extends Publisher implements SimpleBuildStep 
 		// happens when the report could not be generated
 		if (result == null) {
 			log(listener, "Missing report result - report was not successfully completed");
-			return true;
-		}
-
-		if (failedStepsNumber != -1 && result.getFailedSteps() > failedStepsNumber) {
-			log(listener, String.format("Found %d failed steps, while expected at most %d", result.getFailedSteps(),
-					failedStepsNumber));
-			return true;
-		}
-		if (skippedStepsNumber != -1 && result.getSkippedSteps() > skippedStepsNumber) {
-			log(listener, String.format("Found %d skipped steps, while expected at most %d", result.getSkippedSteps(),
-					skippedStepsNumber));
-			return true;
-		}
-		if (pendingStepsNumber != -1 && result.getPendingSteps() > pendingStepsNumber) {
-			log(listener, String.format("Found %d pending steps, while expected at most %d", result.getPendingSteps(),
-					pendingStepsNumber));
-			return true;
-		}
-		if (undefinedStepsNumber != -1 && result.getUndefinedSteps() > undefinedStepsNumber) {
-			log(listener, String.format("Found %d undefined steps, while expected at most %d",
-					result.getUndefinedSteps(), undefinedStepsNumber));
-			return true;
-		}
-		if (failedScenariosNumber != -1 && result.getFailedScenarios() > failedScenariosNumber) {
-			log(listener, String.format("Found %d failed scenarios, while expected at most %d",
-					result.getFailedScenarios(), failedScenariosNumber));
-			return true;
-		}
-		if (failedFeaturesNumber != -1 && result.getFailedFeatures() > failedFeaturesNumber) {
-			log(listener, String.format("Found %d failed features, while expected at most %d",
-					result.getFailedFeatures(), failedFeaturesNumber));
-			return true;
-		}
-
-		double failedStepsThreshold = 100.0 * result.getFailedSteps() / result.getSteps();
-		if (failedStepsThreshold > failedStepsPercentage) {
-			log(listener, String.format("Found %f failed steps, while expected not more than %f percent",
-					failedStepsThreshold, failedStepsPercentage));
-			return true;
-		}
-		double skippedStepsThreshold = 100.0 * result.getSkippedSteps() / result.getSteps();
-		if (skippedStepsThreshold > skippedStepsPercentage) {
-			log(listener, String.format("Found %f skipped steps, while expected not more than %f percent",
-					skippedStepsThreshold, skippedStepsPercentage));
-			return true;
-		}
-		double pendingStepsThreshold = 100.0 * result.getPendingSteps() / result.getSteps();
-		if (pendingStepsThreshold > pendingStepsPercentage) {
-			log(listener, String.format("Found %f pending steps, while expected not more than %f percent",
-					pendingStepsThreshold, pendingStepsPercentage));
-			return true;
-		}
-		double undefinedStepsThreshold = 100.0 * result.getUndefinedSteps() / result.getSteps();
-		if (undefinedStepsThreshold > undefinedStepsPercentage) {
-			log(listener, String.format("Found %f undefined steps, while expected not more than %f percent",
-					undefinedStepsThreshold, undefinedStepsPercentage));
-			return true;
-		}
-		double failedScenariosThreshold = 100.0 * result.getFailedScenarios() / result.getScenarios();
-		if (failedScenariosThreshold > failedScenariosPercentage) {
-			log(listener, String.format("Found %f failed scenarios, while expected not more than %f percent",
-					failedScenariosThreshold, failedScenariosPercentage));
-			return true;
-		}
-		double failedFeaturesThreshold = 100.0 * result.getFailedFeatures() / result.getFeatures();
-		if (failedFeaturesThreshold > failedFeaturesPercentage) {
-			log(listener, String.format("Found %f failed features, while expected not more than %f percent",
-					failedFeaturesThreshold, failedFeaturesPercentage));
 			return true;
 		}
 
